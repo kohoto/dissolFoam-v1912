@@ -1,0 +1,34 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1912                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _f3950763fe-20191219 OPENFOAM=1912
+Arch   : "LSB;label=32;scalar=64"
+Exec   : surfRoughGen
+Date   : Dec 06 2022
+Time   : 14:01:03
+Host   : tohoko-PC
+PID    : 209854
+I/O    : uncollated
+Case   : /home/tohoko/OpenFOAM/dissolFoam-v1912/applications/utils
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+
+--> FOAM FATAL ERROR: 
+cannot find file "/home/tohoko/OpenFOAM/dissolFoam-v1912/applications/utils/system/controlDict"
+
+    From function virtual Foam::autoPtr<Foam::ISstream> Foam::fileOperations::uncollatedFileOperation::readStream(Foam::regIOobject&, const Foam::fileName&, const Foam::word&, bool) const
+    in file global/fileOperations/uncollatedFileOperation/uncollatedFileOperation.C at line 548.
+
+FOAM exiting
+

@@ -1,0 +1,1 @@
+/home/tohoko/OpenFOAM/dissolFoam-v1912/applications/libs/boundaryConditions/linearDeff.H

@@ -1,0 +1,4 @@
+SOURCE = \
+normalMotionSlipPointPatchVectorField.C \
+
+# sources

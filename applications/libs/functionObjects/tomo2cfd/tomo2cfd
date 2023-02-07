@@ -1,0 +1,29 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.com
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Finds the intersection of a plane with specified patch. The plane is
+    defined by a point and a normal.
+    The data output is ...
+
+\*---------------------------------------------------------------------------*/
+
+type            volumeHisto;
+libs            ("libvolumeHisto.so");
+
+// it is necessary to specify all fields used for integration
+// here otherwise postProcess tool wont read them
+fields
+(
+    C
+);
+
+displacement         ( -686.0     -684.5   0.0 );
+dimensions           (1375    1370    100 );
+
+
+// ************************************************************************* //

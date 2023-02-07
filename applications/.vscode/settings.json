@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "roughnessGenerator.C": "cpp",
+        "dissolFoam.C": "cpp",
+        "simpleFoam.C": "cpp",
+        "Test-simpleMatrix.C": "cpp",
+        "CoupledPatchInterpolation.C": "cpp",
+        "dissolMotionPointPatchVectorField.C": "cpp",
+        "steadyStateControl.C": "cpp"
+    }
+}

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+pushd libs
+./Allwmake
+popd
+
+pushd solvers/dissolFoam
+wmake
+popd
+
+pushd utils
+./Allwmake
+popd
+

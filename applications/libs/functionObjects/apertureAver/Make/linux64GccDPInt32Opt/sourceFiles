@@ -1,0 +1,4 @@
+SOURCE = \
+apertureAver.C \
+
+# sources

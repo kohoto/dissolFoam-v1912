@@ -1,0 +1,3 @@
+tomo2cfd.C
+
+LIB = $(FOAM_USER_LIBBIN)/libtomo2cfd

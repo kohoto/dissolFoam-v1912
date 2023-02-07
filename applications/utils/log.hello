@@ -1,0 +1,5 @@
+Command 'hello' not found, but can be installed with:
+sudo snap install hello              # version 2.10, or
+sudo apt  install hello              # version 2.10-2ubuntu4
+sudo apt  install hello-traditional  # version 2.10-5
+See 'snap info hello' for additional versions.
