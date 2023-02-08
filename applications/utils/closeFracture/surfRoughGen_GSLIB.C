@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-  surfRoughGen_GSLIB
+  closeFracture
 
 Description
   Read GSLIB output and assign to the mesh.
@@ -58,7 +58,7 @@ Needs dictionary
  #######################################################################################
 */
 
-class RoughnessGenerator_GSLIB
+class closeFracture
 {
 protected:
   // Protected data
@@ -75,7 +75,7 @@ protected:
 
 public:
   // Constructor
-  RoughnessGenerator_GSLIB(
+  closeFracture(
       int seed_,
       int M_,
       int N_,
@@ -421,7 +421,7 @@ private:
 
   //   disp = sF;
   // }
-}; // end of class RoughnessGenerator_GSLIB
+}; // end of class closeFracture
 
 int main(int argc, char *argv[])
 {
@@ -579,7 +579,7 @@ int main(int argc, char *argv[])
   Info << "maxDisp:       " << maxDisp << endl;
   Info << "Setup RoughnessGenerator class" << endl;
 
-  RoughnessGenerator_GSLIB rg(seed, M, N, majLen, minLen,
+  closeFracture rg(seed, M, N, majLen, minLen,
                               rgh, dHurst, cutLen, maxDisp, wayToApply);
 
   double cpuTime = runTime.elapsedCpuTime();

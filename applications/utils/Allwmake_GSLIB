@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Make GSLIB"
+wmake surfRoughGen_GSLIB
