@@ -589,7 +589,6 @@ int main(int argc, char *argv[])
   if (wayToApply == "synchronous")
   {
     nPatch = 2;
-    
   }
 
   for (int iPatch = 0; iPatch < nPatch; ++iPatch)
@@ -597,8 +596,11 @@ int main(int argc, char *argv[])
 
     // Get patch ID for moving boundaries
     label patchID = mesh.boundaryMesh().findPatchID(patchName);
-    if (iPatch == 1) {patchID = mesh.boundaryMesh().findPatchID(patchName + "_mirrored");}
-    
+    if (iPatch == 1)
+    {
+      patchID = mesh.boundaryMesh().findPatchID(patchName + "_mirrored");
+    }
+
     if (patchID == -1)
     {
       SeriousErrorIn("main")
@@ -611,7 +613,7 @@ int main(int argc, char *argv[])
     vectorField pointDispWall(boundaryPoints.size(), vector::zero);
     vectorField pointNface = mesh.boundaryMesh()[patchID].faceNormals();
     vectorField motionN = patchInterpolator.faceToPointInterpolate(pointNface);
-    Info << patchName <<endl;
+    // forAll (boundaryPoints, i) {Info << boundaryPoints[i] <<endl;} // this showed points I expected
     forAll(motionN, ii) motionN[ii] /= mag(motionN[ii]);
 
     scalarField faceDisp(pointNface.size(), 0.0);
@@ -623,7 +625,10 @@ int main(int argc, char *argv[])
     {
       // pointDisp[i] = std::min(pointDisp[i],  maxDisp);
       // pointDisp[i] = std::max(pointDisp[i], -maxDisp);
-      if (iPatch == 1) {pointDisp2[i] *= -1.0;}
+      if (iPatch == 1)
+      {
+        pointDisp2[i] *= -1.0;
+      }
       pointDisp[i] = pointDisp2[i];
     }
 
@@ -632,7 +637,7 @@ int main(int argc, char *argv[])
     Info << "Maximum and minimum point displacements  "
          << max(pointDisp) << "  " << min(pointDisp) << endl;
 
-    //TODO: !!! Run DICPCG somewhere in between here
+    // TODO: !!! Run DICPCG somewhere in between here
     forAll(pointDispWall, i)
         // pointDispWall[i] = pointDisp[i] * motionN[i];
         pointDispWall[i] = pointDisp[i] * motionN[i];
@@ -642,18 +647,32 @@ int main(int argc, char *argv[])
 
     pointVelocity.boundaryFieldRef()[patchID] == pointDispWall; // update rough surface
   }
-    mesh.update();                                              // if mesh is updated, return true
-    cpuTime = runTime.elapsedCpuTime() - cpuTime;
-    // !!! End Run DICPCG somewhere in between here
-    Info << nl << "Time statistics:" << nl;
 
-    // int wlNP = mesh.boundaryMesh()[patchID].nPoints();
-    Info << "Total number of points:                   " << mesh.nPoints() << nl;
-    // Info << "Number of points on the walls:            " << wlNP << nl;
-    Info << "Running time:                             " << cpuTime << nl << endl;
+  mesh.update(); // before this, boundaryPoints3 is zeros
+  
+  label patchID = mesh.boundaryMesh().findPatchID("solubleWall");
+  const pointField &boundaryPoints3 = mesh.boundaryMesh()[patchID].localPoints();
+  int i2 = 0;
+  for (int m = 0; m < M; ++m)
+  {
+    for (int n = 0; n < N; ++n) // for same xs.
+    {
+      i2 += 1;
+    }
+    Info << boundaryPoints3[i2][2] << endl; // this has to be the same as the first one in closureFracture
+  }
+  
+  cpuTime = runTime.elapsedCpuTime() - cpuTime;
+  // !!! End Run DICPCG somewhere in between here
+  Info << nl << "Time statistics:" << nl;
 
-    Info << "Overwriting points in current time directory." << nl;
-    runTime.writeNow();
+  // int wlNP = mesh.boundaryMesh()[patchID].nPoints();
+  Info << "Total number of points:                   " << mesh.nPoints() << nl;
+  // Info << "Number of points on the walls:            " << wlNP << nl;
+  Info << "Running time:                             " << cpuTime << nl << endl;
+
+  Info << "Overwriting points in current time directory." << nl;
+  runTime.writeNow();
 
   ////////////////////////// END Repeat the procedure after this for the mirrored plane. /////////////////////////////
 
