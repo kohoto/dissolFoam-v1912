@@ -1,0 +1,14 @@
+*.vscode
+cases_1912/
+cases_2016/
+TestCases/
+*.zip
+*.o
+*.dep
+variables
+options
+sourceFiles
+files
+README.md
+log*
+*.o
