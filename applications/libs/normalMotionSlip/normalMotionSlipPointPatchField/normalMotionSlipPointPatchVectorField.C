@@ -140,18 +140,21 @@ void Foam::normalMotionSlipPointPatchVectorField::evaluate
 
 void Foam::normalMotionSlipPointPatchVectorField::updateCoeffs()
 {
-    if(debug) 
-    {
-        Info<<"   normalMotionSlipPointPatchVectorField::updateCoeffs()"<<nl;
-    }
+    // if(debug) 
+    // {
+    //     Info<<"   normalMotionSlipPointPatchVectorField::updateCoeffs()"<<nl;
+    // }
 
     const polyMesh& mesh = this->internalField().mesh()();
     
-    if( debug )
-    {
-      Info << "Reading field: " << fieldName 
-              << "  and scalar: "<< scalarName << nl;
-    }
+    // if( debug )
+    // {
+    //   Info << "Reading field: " << fieldName 
+    //           << "  and scalar: "<< scalarName << nl;
+    // }
+
+    Info<<"   normalMotionSlipPointPatchVectorField::updateCoeffs()"<<nl;
+    Info << "Reading field: " << fieldName << "  and scalar: "<< scalarName << nl; // C and lR
 
     const volScalarField& field =
             this->db().objectRegistry::lookupObject<volScalarField>(fieldName);
@@ -159,13 +162,13 @@ void Foam::normalMotionSlipPointPatchVectorField::updateCoeffs()
     const IOdictionary& IOd
           = this->db().lookupObject<IOdictionary>("transportProperties");
     scalar scalarVal =  (new dimensionedScalar(scalarName, dimLength, IOd))->value();
-    scalarField gradField = -field.boundaryField()[patchID].snGrad();
+    scalarField gradField = -field.boundaryField()[patchID].snGrad(); // gradient of C
     vectorField faceNorm = mesh.boundaryMesh()[patchID].faceNormals();
     
     const scalar dt = this->db().time().deltaTValue();
-    vectorField fD = dt * scalarVal * gradField * faceNorm;
+    vectorField fD = dt * scalarVal * gradField * faceNorm; // dt * lR * dC/dx * normal
     
-    setDisp(fD);
+    setDisp(fD); // Where does this func come from?
 
     valuePointPatchField<vector>::updateCoeffs();
 }

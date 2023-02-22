@@ -30,3 +30,5 @@ forAll(pointFace, i)
 }
 
 this->setDisp(faceVec);
+
+Info << "Tohoko - libs/boundaryConditions/surfaceMotion.H" << endl;

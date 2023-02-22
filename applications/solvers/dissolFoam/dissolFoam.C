@@ -49,12 +49,12 @@ Description
 
 int main(int argc, char *argv[])
 {
-  #include "setRootCase.H"
-  #include "createTime.H"
-  #include "createDynamicFvMesh.H"
+  #include "setRootCase.H" // OF
+  #include "createTime.H"  
+  #include "createDynamicFvMesh.H" // OF
 
-  #include "readDicts.H"
-  #include "createFields.H"
+  #include "readDicts.H" //dF
+  #include "createFields.H" //dF
 
   const label patchID = mesh.boundaryMesh().findPatchID("outlet");
   
@@ -76,8 +76,9 @@ int main(int argc, char *argv[])
  *    Mesh motion & relaxation
  *    Control parameters in dynamicMeshDict
  *###############################################*/
-
+      Info << "Tohoko start" << endl;
       mesh.update();
+      Info << "Tohoko end" << endl;
       Info << "Mesh update: ExecutionTime = " 
            << runTime.elapsedCpuTime() << " s"
            << "  ClockTime = " << runTime.elapsedClockTime() << " s"

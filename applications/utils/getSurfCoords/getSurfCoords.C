@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         forAll (mesh.faces()[faceID], nodei) // since the same points are used for many facies, nodes data will have duplicates.
         {
           const label& nodeID = mesh.faces()[faceID][nodei];
-          Output<< nodeID << endl;
+          Info << nodeID << endl;
         }
       }
     }

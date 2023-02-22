@@ -17,3 +17,5 @@ vectorField fD = dt * scalarVal * gradField * faceNorm;
 fD = fD * auxField.boundaryField()[patchID] / scalarAux;
 
 this->setDisp(fD);
+
+Info << "Tohoko - libs/boundaryConditions/gradCMotionDeff.H" << endl;

@@ -71,3 +71,5 @@ forAll( faceVec, i )
     faceVec[i] = faceDisp[i] * faceNorm[i];
 
 this->setDisp(faceVec);
+
+Info << "Tohoko - libs/boundaryConditions/roughSurfaceMotion.H" << endl;

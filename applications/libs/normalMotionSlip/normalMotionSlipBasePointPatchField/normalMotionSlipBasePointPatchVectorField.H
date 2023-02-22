@@ -25,9 +25,9 @@ Class
     Foam::normalMotionSlipBasePointPatchVectorField
 
 Description
-    This patch can be used for the mesh motion using velocityLaplacian 
-    dynamic mesh solver. It should be used along with 
-    normalMotionSlipBasePointPatchVectorField for cellMotionU volume filed. 
+    This patch can be used for the mesh motion using velocityLaplacian
+    dynamic mesh solver. It should be used along with
+    normalMotionSlipBasePointPatchVectorField for cellMotionU volume filed.
     It saves face displacement at the begin of Laplace solver. At the end it
     interpolates displacement to the point field.
 
@@ -57,144 +57,121 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-class normalMotionSlipBasePointPatchVectorField;
+    // Forward declaration of friend functions and operators
+    class normalMotionSlipBasePointPatchVectorField;
 
+    // Ostream& operator<< // overwrite << operator only when "Info << const normalMotionSlipBasePointPatchVectorField&" came.
+    // (
+    //     Ostream&,
+    //     const normalMotionSlipBasePointPatchVectorField&
+    // );
 
-Ostream& operator<<
-(
-    Ostream&,
-    const normalMotionSlipBasePointPatchVectorField&
-);
+    /*---------------------------------------------------------------------------*\
+                            Class normalMotionSlipBasePointPatchVectorField Declaration
+    \*---------------------------------------------------------------------------*/
 
+    class normalMotionSlipBasePointPatchVectorField
+        : public valuePointPatchField<vector>
+    {
+        // Private data
 
-/*---------------------------------------------------------------------------*\
-                        Class normalMotionSlipBasePointPatchVectorField Declaration
-\*---------------------------------------------------------------------------*/
+        //- switches relaxation on and off
+        bool rlxON;
 
-class normalMotionSlipBasePointPatchVectorField
-:
-    public valuePointPatchField<vector>
-{
-    // Private data
+        //- saves displacement field on the boundary for cellMotionU
+        vectorField faceDispl;
 
-    //- switches relaxation on and off
-    bool rlxON;
-    
-    //- saves displacement field on the boundary for cellMotionU
-    vectorField faceDispl;
-    
-public:
+    public:
+        //- Runtime type information
+        TypeName("normalMotionSlipBase");
 
-    //- Runtime type information
-    TypeName("normalMotionSlipBase");
-
-
-    // Constructors
+        // Constructors
 
         //- Construct from patch and internal field
-        normalMotionSlipBasePointPatchVectorField
-        (
-            const pointPatch&,
-            const DimensionedField<vector, pointMesh>&
-        );
+        normalMotionSlipBasePointPatchVectorField(
+            const pointPatch &,
+            const DimensionedField<vector, pointMesh> &);
 
         //- Construct from patch, internal field and dictionary
-        normalMotionSlipBasePointPatchVectorField
-        (
-            const pointPatch&,
-            const DimensionedField<vector, pointMesh>&,
-            const dictionary&
-        );
+        normalMotionSlipBasePointPatchVectorField(
+            const pointPatch &,
+            const DimensionedField<vector, pointMesh> &,
+            const dictionary &);
 
         //- Construct by mapping given patchField<vector> onto a new patch
-        normalMotionSlipBasePointPatchVectorField
-        (
-            const normalMotionSlipBasePointPatchVectorField&,
-            const pointPatch&,
-            const DimensionedField<vector, pointMesh>&,
-            const pointPatchFieldMapper&
-        );
+        normalMotionSlipBasePointPatchVectorField(
+            const normalMotionSlipBasePointPatchVectorField &,
+            const pointPatch &,
+            const DimensionedField<vector, pointMesh> &,
+            const pointPatchFieldMapper &);
 
         //- Construct and return a clone
         virtual autoPtr<pointPatchField<vector>> clone() const
         {
-            return autoPtr<pointPatchField<vector>>
-            (
-                new normalMotionSlipBasePointPatchVectorField
-                (
-                    *this
-                )
-            );
+            return autoPtr<pointPatchField<vector>>(
+                new normalMotionSlipBasePointPatchVectorField(
+                    *this));
         }
 
         //- Construct as copy setting internal field reference
-        normalMotionSlipBasePointPatchVectorField
-        (
-            const normalMotionSlipBasePointPatchVectorField&,
-            const DimensionedField<vector, pointMesh>&
-        );
+        normalMotionSlipBasePointPatchVectorField(
+            const normalMotionSlipBasePointPatchVectorField &,
+            const DimensionedField<vector, pointMesh> &);
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<vector>> clone
-        (
-            const DimensionedField<vector, pointMesh>& iF
-        ) const
+        virtual autoPtr<pointPatchField<vector>> clone(
+            const DimensionedField<vector, pointMesh> &iF) const
         {
-            return autoPtr<pointPatchField<vector>>
-            (
-                new normalMotionSlipBasePointPatchVectorField
-                (
+            return autoPtr<pointPatchField<vector>>(
+                new normalMotionSlipBasePointPatchVectorField(
                     *this,
-                    iF
-                )
-            );
+                    iF));
         }
 
-    // Member functions
-        const bool& getRlxON() const
-        { 
-          return rlxON; 
+        // Member functions
+        const bool &getRlxON() const
+        {
+            return rlxON;
         }
-        
+
         void setRlxON(bool rlx)
-        { 
-          rlxON = rlx; 
+        {
+            rlxON = rlx;
         }
 
-        const Field<vector>& getDisp() const
-        { 
-          return faceDispl; 
+        const Field<vector> &getDisp() const
+        {
+            return faceDispl;
         }
-        
+
         void setDisp(Field<vector> f)
-        { 
-          faceDispl = f; 
+        {
+            Info << "Using setDisp(Field<vector> f)" << nl; // this run before the motion solver.
+        f.replace(0, 0.0);
+        f.replace(1, 0.0);
+            faceDispl = f;
         }
-        
+
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
-        
+
         //- Update the patch field
-        virtual void evaluate
-        (
-          const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
-        );
-        
+        virtual void evaluate(
+            const Pstream::commsTypes commsType = Pstream::commsTypes::blocking);
+
         //- Write
-        virtual void write(Ostream&) const;
-};
+        virtual void write(Ostream &) const;
+    };
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//#ifdef NoRepository
-//    #include "normalMotionSlipBasePointPatchVectorField.C"
-//#endif
+// #ifdef NoRepository
+//     #include "normalMotionSlipBasePointPatchVectorField.C"
+// #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

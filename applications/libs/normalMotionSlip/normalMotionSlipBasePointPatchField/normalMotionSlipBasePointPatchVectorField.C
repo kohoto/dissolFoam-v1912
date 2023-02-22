@@ -83,8 +83,9 @@ Foam::normalMotionSlipBasePointPatchVectorField::normalMotionSlipBasePointPatchV
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::normalMotionSlipBasePointPatchVectorField::evaluate
+// this member function automatically run when normalMotionSlipBasePointPatchVectorField is constructed
+// check header file L179
+void Foam::normalMotionSlipBasePointPatchVectorField::evaluate 
 (
     const Pstream::commsTypes
 )
@@ -97,9 +98,10 @@ void Foam::normalMotionSlipBasePointPatchVectorField::evaluate
     const polyMesh& mesh = this->internalField().mesh()();
     label patchID = this->patch().index();
     const fvMesh& fvmesh_ = refCast<const fvMesh>(mesh);
+    Info<<"normalMotionSlipBasePointPatchVectorField::evaluate() - Tohoko 1"<<nl;
     coupledPatchInterpolation patchInterpolator
     ( 
-        mesh.boundaryMesh()[patchID], fvmesh_
+        mesh.boundaryMesh()[patchID], fvmesh_ // constractor in L176 of CoupledPatchInterpolation.C
     );
   
     const volVectorField& cmu =
@@ -130,19 +132,30 @@ void Foam::normalMotionSlipBasePointPatchVectorField::evaluate
     transform(I - sqr(fn), cmu.boundaryField()[patchID].patchInternalField())
     );
     */
-    
-    
-    this->operator==
+
+    // volVectorField cmu2 = cmu.clone();
+
+    // forAll(cmu.boundaryField()[patchID], celli)
+    // {
+    //     vector a = cmu.boundaryField()[patchID][celli];
+    //     a.x() = 0.0;
+    //     a.y() = 0.0;
+    //     vector b& = cmu2.boundaryField()[patchID][celli];
+    //     b = a;
+    // }
+    this->operator== // overwriting == operator here. don't know why
     ( 
-        patchInterpolator.faceToPointInterpolate
+        patchInterpolator.faceToPointInterpolate // when == is used in dissolFoam.C, use this overload????
         (
             cmu.boundaryField()[patchID]
             //+
             //proj
         )
+        
     );
-    
-    valuePointPatchField<vector>::evaluate();
+    Info << "Using normalMotionSlipBasePointPatchVectorField.C - Tohoko 4" <<endl;
+    // Info << this << endl; // this outputs "1"
+    valuePointPatchField<vector>::evaluate(); // is this recursive?
 }
 
 void Foam::normalMotionSlipBasePointPatchVectorField::updateCoeffs()
@@ -151,7 +164,7 @@ void Foam::normalMotionSlipBasePointPatchVectorField::updateCoeffs()
     {
         Info<<"   normalMotionSlipBasePointPatchVectorField::updateCoeffs()"<<nl;
     }
-
+    Info<<"normalMotionSlipBasePointPatchVectorField::updateCoeffs() - Tohoko -1"<<nl;
     valuePointPatchField<vector>::updateCoeffs();
 }
 

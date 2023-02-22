@@ -15,3 +15,4 @@ vectorField fD = dt * scalarVal * gradField * faceNorm;
 
 this->setDisp(fD);
 this->setRlxON(true);
+Info << "Tohoko - libs/boundaryConditions/gradCMotion.H" << endl;

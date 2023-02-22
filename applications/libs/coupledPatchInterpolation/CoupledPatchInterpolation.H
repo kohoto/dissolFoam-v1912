@@ -104,6 +104,10 @@ class CoupledPatchInterpolation
         //- Clear weights
         void clearWeights();
 
+        // Added by Tohoko
+        void AssignZeros(vector& tvalue) const;
+
+        void AssignZeros(double& tvalue) const;
 
 public:
 

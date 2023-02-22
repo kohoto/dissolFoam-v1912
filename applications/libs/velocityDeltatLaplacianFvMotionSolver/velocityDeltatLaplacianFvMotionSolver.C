@@ -110,6 +110,7 @@ Foam::velocityDeltatLaplacianFvMotionSolver::~velocityDeltatLaplacianFvMotionSol
 Foam::tmp<Foam::pointField>
 Foam::velocityDeltatLaplacianFvMotionSolver::curPoints() const
 {
+    Info << "Using velocityDeltatLaplacianFvMotionSolver::curPoints()- where am I?" << nl; 
     interpolationPtr_->interpolate
     (
         cellMotionU_,
@@ -137,7 +138,7 @@ void Foam::velocityDeltatLaplacianFvMotionSolver::solve()
 
     diffusivityPtr_->correct();
     pointMotionU_.boundaryFieldRef().updateCoeffs();
-    
+    Info << "Tohoko 0" <<nl;
     int iter = 0;
     while ( true )
     {
@@ -173,7 +174,7 @@ void Foam::velocityDeltatLaplacianFvMotionSolver::solve()
       if( residual < tolerance )
       {
           Info << "velocity laplacian: Converged in " 
-               << iter << " steps.  Residual = "
+               << iter << " steps. (no max iter is set.) Residual = "
                << residual << nl << endl;
           break;
       }
@@ -199,9 +200,10 @@ void Foam::velocityDeltatLaplacianFvMotionSolver::updateMesh
 (
     const mapPolyMesh& mpm
 )
-{
+{   
+    Info << "Using velocityDeltatLaplacianFvMotionSolver.C / before update mesh - This function is not used" <<endl;
     velocityMotionSolver::updateMesh(mpm);
-
+    Info << "Using velocityDeltatLaplacianFvMotionSolver.C / after update mesh" <<endl;
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
     diffusivityPtr_.reset(nullptr);

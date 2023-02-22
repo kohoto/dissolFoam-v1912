@@ -105,7 +105,7 @@ void Foam::normalMotionSlipFvPatchVectorField::updateCoeffs()
     {
         return;
     }
-    
+    Info<<"   normalMotionSlipFvPatchVectorField::updateCoeffs()"<<nl;
     label patchID = this->patch().index();
 
     const pointVectorField& pmU = 
@@ -159,7 +159,7 @@ void Foam::normalMotionSlipFvPatchVectorField::updateCoeffs()
 //Foam::tmp<Foam::vectorField>
 Foam::vectorField
 Foam::normalMotionSlipFvPatchVectorField::
-nextFaceNormals(const pointField& points, const List<face>& flist) const
+nextFaceNormals(const pointField& points, const List<face>& flist) const // not used in dissolFrac
 {
   vectorField fn( flist.size() );
   forAll(fn, facei)
@@ -167,6 +167,7 @@ nextFaceNormals(const pointField& points, const List<face>& flist) const
     fn[facei]  = flist[facei].unitNormal(points);
     fn[facei] /= mag(fn[facei]) + VSMALL;
   }
+  Info << "Tohoko - Foam::normalMotionSlipFvPatchVectorField::nextFaceNormals" <<endl;
   return fn;
 }
 

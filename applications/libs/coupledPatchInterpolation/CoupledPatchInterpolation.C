@@ -196,10 +196,10 @@ CoupledPatchInterpolation<Patch>::~CoupledPatchInterpolation()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Patch>
-template<class Type>
-tmp<Field<Type> > CoupledPatchInterpolation<Patch>::faceToPointInterpolate
+template<class Type> // template program
+tmp<Field<Type> > CoupledPatchInterpolation<Patch>::faceToPointInterpolate // used in dissolCase
 (
-    const Field<Type>& ff
+    const Field<Type>& ff //cellMotionU for solubleWall
 ) const
 {
     // Check size of the given field
@@ -213,7 +213,7 @@ tmp<Field<Type> > CoupledPatchInterpolation<Patch>::faceToPointInterpolate
             << patch_.size() << " field size: " << ff.size()
             << abort(FatalError);
     }
-
+    // Info << "CoupledPatchInterpolation<Patch>::faceToPointInterpolate" << endl;
     tmp<Field<Type> > tresult
     (
         new Field<Type>
@@ -230,33 +230,85 @@ tmp<Field<Type> > CoupledPatchInterpolation<Patch>::faceToPointInterpolate
     
     const labelListList& pointFaces = patch_.pointFaces();
     const scalarListList& weights = faceToPointWeights();
-
+    //Type tvalue(0.0, 0.0, 0.0); // If I write like this, this is just taking the last value. So I'm not multiplying vector.
     forAll(pointFaces, pointi)
     {
         const labelList& curFaces = pointFaces[pointi];
         const scalarList& w = weights[pointi];
         
+        // Type tvalue = pTraits<Type>::zero; // original
+        // Vector<Type> tvalue(0.0, 0.0, 0.0);
         Type tvalue = pTraits<Type>::zero;
+        Type fvalue = pTraits<Type>::zero;
 
-        forAll(curFaces, facei)
+        
+        // Type a = ff[curFaces[0]].x();
+        // Info << "a = " <<  a << endl;
+        forAll(curFaces, facei) // facei:0-3
         {
-          tvalue += w[facei]*ff[curFaces[facei]];
+          // Type a = ff[curFaces[facei]];
+          //if (isA<vector>(a)) {Info << a.x() << nl;}
+          tvalue += w[facei] * ff[curFaces[facei]]; // w: scalar. ff: vector [3 x 1], ff.size() = 19040
+          
+        //   label n=0;
+        //   // vector hello(0.0, 1.0, 2.0);
+        //   for(auto&& z : tvalue)
+        //   {
+        //     if(n==2) continue;
+        //     z=0;
+        //     n++;
+        //   }
+          // if (isA<vector>(tvalue)) tvalue.x() = tvalue.y() = scalar(0);
+          //tvalue = cmptMultiply(tvalue, fvalue);
         }
+        /* put in assign values
+
+        */
+        AssignZeros(tvalue);
+
         pointValue[pointi] = tvalue;
+        // Info << "tvalue in main = " << tvalue << nl;
+        // Info << "pointValue[pointi] = " <<  pointValue[pointi] << endl; // i noticed that if I set as [pointi, 1], then it shows the same array everytime.
+        // If I change it to [i, pointi], then the value changed
+        // If I change it to [1, pointi, 1] then all values are the same
+        // If I change it to [1, 1, pointi] then the value changed
     }
-    
+
+    // Info << pTraits<Type>::dim <<nl; // 3
+    // Info << pTraits<Type>::typeName <<nl; // vector
+    Info << "Using CoupledPatchInterpolation.C - Tohoko 3" << nl;    
     syncTools::syncPointList( mesh_, patch_.meshPoints(), pointValue, plusEqOp<Type>(), pTraits<Type>::zero);
     
     // normalization
     const scalarList& sumw = faceToPointSumWeights();
     forAll(pointFaces, pointi)
     {
-      result[pointi] = pointValue[pointi] / sumw[pointi];
+      result[pointi] = pointValue[pointi] / sumw[pointi]; // pointValue is vector
+      // result[pointi].x() = 0.0; // doesn't work
     }
-    
+
     return tresult;
 }
 
+template<class Patch>
+void CoupledPatchInterpolation<Patch>::AssignZeros
+(
+    vector& tvalue
+) const
+{
+    tvalue.x() = 0.0;
+    tvalue.y() = 0.0;
+    // Info << "tvalue in AssignZero = " << tvalue << nl;
+}
+
+template<class Patch>
+void CoupledPatchInterpolation<Patch>:: AssignZeros
+(
+    double& tvalue
+) const
+{
+    // Info << "AssignZeros for scalar" << nl; 
+}
 
 template<class Patch>
 template<class Type>
